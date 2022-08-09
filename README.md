@@ -1,6 +1,6 @@
 # DiscordChecker
 
-This script will help you with checking whether your Discord Tokens are valid or invalid
+This script will help you with checking whether your Discord Tokens are valid or invalid.
 
 Clone the repository to your computer, put the tokens to tokens.txt and run the script.
 
