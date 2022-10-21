@@ -5,6 +5,9 @@ import os
 if not os.path.exists("tokens.txt"):
     print(Fore.RED + "Please, create tokens.txt first!")
 
+valid = []
+invalid = []
+
 
 def check_tokens():
     with open("tokens.txt", "r") as f:
@@ -20,10 +23,22 @@ def check_tokens():
             resp = requests.get(url="https://discord.com/api/v9/users/@me", headers=headers)
 
             if resp.status_code == 200:
+                valid.append(token)
                 print(Fore.GREEN + token + " : Valid")
             else:
+                invalid.append(token)
                 print(Fore.RED + token + " : Invalid")
 
 
-if __name__ == '__main__':
+def get_info():
     check_tokens()
+    print()
+    print(Fore.RED + "Invalid tokens: " + Fore.BLUE + str(len(invalid)))
+    print()
+    for i in valid:
+        print(Fore.GREEN + "Valid tokens: " + Fore.BLUE + str(len(valid)))
+        print(Fore.LIGHTWHITE_EX + i)
+
+
+if __name__ == '__main__':
+    get_info()
