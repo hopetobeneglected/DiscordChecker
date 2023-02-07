@@ -9,18 +9,27 @@ valid = []
 invalid = []
 
 
-def check_tokens():
+def check_token(token: str):
+    header = {
+        "Authorization": token,
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    }
+
+    resp = requests.get(url="https://discord.com/api/v9/users/@me", headers=header)
+    return resp
+
+
+def check_all():
     with open("tokens.txt", "r") as f:
+
         tokens = f.read()
+
+        print(Fore.BLUE + "Discord tokens validity check...\n")
+
         for token in tokens.split():
             print(Fore.YELLOW + "Checking... " + Fore.BLUE + token)
 
-            headers = {
-                "Authorization": token,
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-            }
-
-            resp = requests.get(url="https://discord.com/api/v9/users/@me", headers=headers)
+            resp = check_token(token)
 
             if resp.status_code == 200:
                 valid.append(token)
@@ -30,13 +39,19 @@ def check_tokens():
                 print(Fore.RED + token + " : Invalid")
 
 
+def delete_invalid():
+    with open("tokens.txt", "w+") as f:
+        for token in valid:
+            f.write(token + "\n")
+
+
 def get_info():
-    check_tokens()
-    print()
-    print(Fore.RED + "Invalid tokens: " + Fore.BLUE + str(len(invalid)))
-    print()
+    check_all()
+    print("\n" + Fore.RED + "Invalid tokens: " + Fore.BLUE + str(len(invalid)) + "\n")
+    delete_invalid()
+    print("All invalid tokens were successfully deleted from the tokens.txt file!\n")
+    print(Fore.GREEN + "Valid tokens: " + Fore.BLUE + str(len(valid)))
     for i in valid:
-        print(Fore.GREEN + "Valid tokens: " + Fore.BLUE + str(len(valid)))
         print(Fore.LIGHTWHITE_EX + i)
 
 
